@@ -5,9 +5,16 @@ import { Float } from '@react-three/drei';
 import { easing } from 'maath';
 import { SoundManagerRef } from './SoundManager';
 
+// ... import 保持不变
+
+// 🔥 新增：检测是否为移动设备
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
 // --- 配置项 ---
-const MAIN_COUNT = 1500;
-const ATMOSPHERE_COUNT = 5000;
+// 🔥 修改：如果是手机，粒子数量减半或更少
+const MAIN_COUNT = isMobile ? 600 : 1500;      // 手机 600，电脑 1500
+const ATMOSPHERE_COUNT = isMobile ? 1000 : 5000; // 手机 1000，电脑 5000
+
 const TREE_RADIUS_BASE = 4.0;
 const TREE_HEIGHT = 11;
 const RADIUS = 15;

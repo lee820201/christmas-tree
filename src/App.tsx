@@ -4,6 +4,7 @@ import { Loader } from '@react-three/drei';
 import { Experience } from './components/Experience';
 import { SoundManager, SoundManagerRef } from './components/SoundManager';
 import { UI } from './components/UI';
+import * as THREE from 'three';
 
 export default function App() {
   const [hasStarted, setHasStarted] = useState(false);
@@ -11,6 +12,11 @@ export default function App() {
   const soundRef = useRef<SoundManagerRef>(null);
 
   const handleStart = () => {
+    // 显式唤醒 Three.js 的音频上下文，解决 iOS/Safari 卡死问题
+    const audioContext = THREE.AudioContext.getContext();
+    if (audioContext.state === 'suspended') {
+      audioContext.resume();
+    }
     setHasStarted(true);
     // 延迟一点自动聚合
     setTimeout(() => {

@@ -5,6 +5,10 @@ import { SoundManagerRef } from './SoundManager';
 import React from 'react';
 
 export function Experience({ isTreeMode, soundRef }: { isTreeMode: boolean, soundRef: React.RefObject<SoundManagerRef | null> }) {
+  // 🔥 新增：检测是否为移动设备
+  // 如果是手机/平板，返回 true
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
   return (
     <>
       <PerspectiveCamera makeDefault position={[0, 0, 20]} fov={45} />
@@ -42,18 +46,22 @@ export function Experience({ isTreeMode, soundRef }: { isTreeMode: boolean, soun
         </group>
       </Float>
 
-      <EffectComposer>
-        {/* 🔻 辉光极致克制：只允许极亮的高光点产生微弱光晕 */}
-        <Bloom
-          luminanceThreshold={1.5} // 阈值极高，普通材质不再发光
-          luminanceSmoothing={0.1}
-          mipmapBlur
-          intensity={0.4} // 强度极低
-          radius={0.5}
-        />
-        <Noise opacity={0.05} />
-        <Vignette eskil={false} offset={0.05} darkness={1.3} />
-      </EffectComposer>
+      {/* 🔥 性能优化：仅在非移动端（电脑）开启后期特效 */}
+      {/* 手机 GPU 通常无法承受 Bloom 和 Noise 的叠加，容易导致黑屏或闪退 */}
+      {!isMobile && (
+        <EffectComposer disableNormalPass>
+          {/* 🔻 辉光极致克制：只允许极亮的高光点产生微弱光晕 */}
+          <Bloom
+            luminanceThreshold={1.5} // 阈值极高，普通材质不再发光
+            luminanceSmoothing={0.1}
+            mipmapBlur
+            intensity={0.4} // 强度极低
+            radius={0.5}
+          />
+          <Noise opacity={0.05} />
+          <Vignette eskil={false} offset={0.05} darkness={1.3} />
+        </EffectComposer>
+      )}
     </>
   );
 }
