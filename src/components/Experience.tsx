@@ -24,7 +24,7 @@ export function Experience({ isTreeMode, soundRef }: { isTreeMode: boolean, soun
 
       {/* --- 灯光调整：更深邃，对比度更高 --- */}
       {/* 降低环境光，让暗部更暗 */}
-      <Environment preset="city" environmentIntensity={0.8} />
+      <Environment files="/potsdamer_platz_1k.hdr" environmentIntensity={0.8} />
       {/* 大幅降低底光，制造层次感 */}
       <ambientLight intensity={0.3} color="#0a2a1a" />
 
